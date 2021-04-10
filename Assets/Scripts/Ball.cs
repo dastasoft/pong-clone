@@ -2,36 +2,15 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    [SerializeField] float speed = 10f;
+    [SerializeField] float timeToDespawn = 0.5f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        SpawnAndImpulse();
+        Impulse();
     }
 
-    // Update is called once per frame
-    void Update()
+    void Impulse()
     {
-
-    }
-
-    public void SpawnAndImpulse()
-    {
-        Spawn();
-        InitialImpulse();
-    }
-
-    void Spawn()
-    {
-        Camera gameCamera = Camera.main;
-        Vector3 newPos = gameCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
-
-        transform.position = new Vector2(newPos.x, newPos.y);
-    }
-
-    void InitialImpulse()
-    {
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-5, 1);
+        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-5, 2);
     }
 }
