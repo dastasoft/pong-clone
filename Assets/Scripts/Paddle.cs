@@ -12,7 +12,6 @@ public class Paddle : MonoBehaviour
 
     void Start()
     {
-        SetUpInitialPos();
         SetUpMoveBoundaries();
     }
 
@@ -62,9 +61,16 @@ public class Paddle : MonoBehaviour
 
     void CPUMovement()
     {
-        float newPos = Mathf.Clamp(FindObjectOfType<Ball>().transform.position.y, yMin, yMax);
+        float ballPos = FindObjectOfType<Ball>().transform.position.y;
+        float distance = ballPos - transform.position.y;
+        if (Mathf.Abs(distance) > 0.5f)
+        {
+            float input = distance > 0 ? 1 : -1;
+            float deltaY = input * speed * Time.deltaTime;
+            float newPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
 
-        transform.position = new Vector2(transform.position.x, newPos);
+            transform.position = new Vector2(transform.position.x, newPos);
+        }
     }
 
     void PlayerMovement()
@@ -74,5 +80,15 @@ public class Paddle : MonoBehaviour
         float newPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
 
         transform.position = new Vector2(transform.position.x, newPos);
+    }
+
+    public void SetPlayerNumber(int value)
+    {
+        playerNumber = value;
+    }
+
+    public float GetHorizontalPadding()
+    {
+        return horizontalPadding;
     }
 }
