@@ -3,14 +3,13 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField] float timeToDespawn = 0.5f;
-
-    void Start()
+    public void Impulse(Vector2 direction)
     {
-        Impulse();
+        gameObject.GetComponent<Rigidbody2D>().velocity = direction;
     }
 
-    void Impulse()
+    public float GetTimeToDespawn()
     {
-        gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-5, 2);
+        return timeToDespawn;
     }
 }

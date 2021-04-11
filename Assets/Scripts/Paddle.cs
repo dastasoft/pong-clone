@@ -5,6 +5,7 @@ public class Paddle : MonoBehaviour
     [SerializeField] float speed = 10f;
     [SerializeField] float verticalPadding = 1f;
     [SerializeField] float horizontalPadding = 1f;
+    [SerializeField] [Range(0, 2)] int playerNumber = 0; // 0 = CPU
 
     float yMin;
     float yMax;
@@ -25,10 +26,18 @@ public class Paddle : MonoBehaviour
         Camera gameCamera = Camera.main;
 
         float xMin = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).x + horizontalPadding;
-        float xMax = gameCamera.ViewportToWorldPoint(new Vector3(1, 0, 0)).x + horizontalPadding;
+        float xMax = gameCamera.ViewportToWorldPoint(new Vector3(1, 0, 0)).x - horizontalPadding;
         float yMid = gameCamera.ViewportToWorldPoint(new Vector3(0, 0.5f, 0)).y;
 
-        transform.position = new Vector2(xMin, yMid);
+        if (playerNumber == 1)
+        {
+            transform.position = new Vector2(xMin, yMid);
+        }
+        else if (playerNumber == 2)
+        {
+            transform.position = new Vector2(xMax, yMid);
+        }
+
     }
 
     void SetUpMoveBoundaries()
@@ -41,7 +50,27 @@ public class Paddle : MonoBehaviour
 
     void Move()
     {
-        float deltaY = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+        if (playerNumber == 0)
+        {
+            CPUMovement();
+        }
+        else
+        {
+            PlayerMovement();
+        }
+    }
+
+    void CPUMovement()
+    {
+        float newPos = Mathf.Clamp(FindObjectOfType<Ball>().transform.position.y, yMin, yMax);
+
+        transform.position = new Vector2(transform.position.x, newPos);
+    }
+
+    void PlayerMovement()
+    {
+        float input = Input.GetAxis(playerNumber == 1 ? "Vertical" : "Vertical2");
+        float deltaY = input * speed * Time.deltaTime;
         float newPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
 
         transform.position = new Vector2(transform.position.x, newPos);

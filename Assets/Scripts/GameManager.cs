@@ -3,6 +3,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] Ball ballPrefab;
+    [SerializeField] Scoreboard scoreboard;
+    [SerializeField] int pointsToWin = 10;
+
+    bool leftSide = false;
 
     void Start()
     {
@@ -11,16 +15,45 @@ public class GameManager : MonoBehaviour
 
     void SpawnBall()
     {
-        Camera gameCamera = Camera.main;
-        Vector3 initialBallPos = gameCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+        Vector3 initialBallPos = GetCenterField();
 
-        Instantiate(ballPrefab, new Vector2(initialBallPos.x, initialBallPos.y), Quaternion.identity);
+        Ball ball = Instantiate(ballPrefab, new Vector2(initialBallPos.x, initialBallPos.y), Quaternion.identity) as Ball;
+
+        ball.Impulse(new Vector2(leftSide ? 8 : -8, 2));
+
+        leftSide = !leftSide;
     }
 
-    public void Goal()
+    Vector3 GetCenterField()
     {
-        // TODO Increase Score
+        Camera gameCamera = Camera.main;
+        return gameCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+    }
 
-        SpawnBall();
+    public void Goal(string wallName)
+    {
+        UpdateScore(wallName);
+
+        if (CheckWinCondition())
+        {
+            FindObjectOfType<SceneLoader>().LoadEndScene();
+        }
+        else
+        {
+            SpawnBall();
+        }
+
+    }
+
+    void UpdateScore(string wallName)
+    {
+        string side = wallName == "Left Wall" ? "left" : "right";
+
+        scoreboard.IncreaseScore(side);
+    }
+
+    bool CheckWinCondition()
+    {
+        return scoreboard.GetLeftScore() >= pointsToWin || scoreboard.GetRightScore() >= pointsToWin;
     }
 }

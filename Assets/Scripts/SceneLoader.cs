@@ -13,6 +13,11 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
+    public void LoadEndScene()
+    {
+        SceneManager.LoadScene("End");
+    }
+
     public void Quit()
     {
         Quit();
