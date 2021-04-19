@@ -8,6 +8,14 @@ public class GameManager : MonoBehaviour
         TwoPlayer
     }
 
+    enum WallNames
+    {
+        TopWall,
+        BottomWall,
+        LeftGoal,
+        RightGoal
+    }
+
     [SerializeField] Ball ballPrefab;
     [SerializeField] Paddle paddlePrefab;
     [SerializeField] GameObject wallPrefab;
@@ -16,6 +24,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameType gameType;
     Scoreboard scoreboard;
     bool leftSide;
+    public string winner = "";
 
     void Awake()
     {
@@ -55,15 +64,19 @@ public class GameManager : MonoBehaviour
 
         GameObject topWall = Instantiate(wallPrefab, new Vector2(0, top + 0.5f), Quaternion.identity);
         topWall.GetComponent<BoxCollider2D>().size = new Vector2(right - left, 1f);
+        topWall.name = WallNames.TopWall.ToString();
 
         GameObject bottomWall = Instantiate(wallPrefab, new Vector2(0, bottom - 0.5f), Quaternion.identity);
         bottomWall.GetComponent<BoxCollider2D>().size = new Vector2(right - left, 1f);
+        bottomWall.name = WallNames.BottomWall.ToString();
 
         GameObject leftGoal = Instantiate(goalPrefab, new Vector2(left, 0), Quaternion.identity);
         leftGoal.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, top - bottom);
+        leftGoal.name = WallNames.LeftGoal.ToString();
 
         GameObject rightGoal = Instantiate(goalPrefab, new Vector2(right, 0), Quaternion.identity);
         rightGoal.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, top - bottom);
+        rightGoal.name = WallNames.RightGoal.ToString();
     }
     void SpawnPlayers()
     {
@@ -105,6 +118,7 @@ public class GameManager : MonoBehaviour
 
         if (CheckWinCondition())
         {
+            winner = scoreboard.GetWinner();
             FindObjectOfType<SceneLoader>().LoadEndScene();
         }
         else
@@ -116,7 +130,7 @@ public class GameManager : MonoBehaviour
 
     void UpdateScore(string wallName)
     {
-        string side = wallName == "Left Wall" ? "left" : "right";
+        string side = wallName == WallNames.LeftGoal.ToString() ? "left" : "right";
 
         scoreboard.IncreaseScore(side);
     }

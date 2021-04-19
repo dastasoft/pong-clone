@@ -25,6 +25,11 @@ public class Scoreboard : MonoBehaviour
         return int.Parse(leftScore.GetComponent<Text>().text);
     }
 
+    public string GetWinner()
+    {
+        return int.Parse(leftScore.GetComponent<Text>().text) > int.Parse(rightScore.GetComponent<Text>().text) ? "Player 1" : "Player 2";
+    }
+
     public int GetRightScore()
     {
         return int.Parse(rightScore.GetComponent<Text>().text);
