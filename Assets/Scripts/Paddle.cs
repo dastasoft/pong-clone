@@ -6,6 +6,9 @@ public class Paddle : MonoBehaviour
     [SerializeField] float verticalPadding = 1f;
     [SerializeField] float horizontalPadding = 1f;
     [SerializeField] [Range(0, 2)] int playerNumber = 0; // 0 = CPU
+    [SerializeField] float cpuRangeVision = 0.5f;
+    [SerializeField] string player1hotkeys = "Vertical";
+    [SerializeField] string player2hotkeys = "Vertical2";
 
     float yMin;
     float yMax;
@@ -63,19 +66,21 @@ public class Paddle : MonoBehaviour
     {
         float ballPos = FindObjectOfType<Ball>().transform.position.y;
         float distance = ballPos - transform.position.y;
-        if (Mathf.Abs(distance) > 0.5f)
+        if (Mathf.Abs(distance) > cpuRangeVision)
         {
             float input = distance > 0 ? 1 : -1;
-            float deltaY = input * speed * Time.deltaTime;
-            float newPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
-
-            transform.position = new Vector2(transform.position.x, newPos);
+            PerformMovement(input);
         }
     }
 
     void PlayerMovement()
     {
-        float input = Input.GetAxis(playerNumber == 1 ? "Vertical" : "Vertical2");
+        float input = Input.GetAxis(playerNumber == 1 ? player1hotkeys : player2hotkeys);
+        PerformMovement(input);
+    }
+
+    void PerformMovement(float input)
+    {
         float deltaY = input * speed * Time.deltaTime;
         float newPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
 

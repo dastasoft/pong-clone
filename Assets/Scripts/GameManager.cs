@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Ball ballPrefab;
     [SerializeField] Paddle paddlePrefab;
+    [SerializeField] GameObject wallPrefab;
+    [SerializeField] GameObject goalPrefab;
     [SerializeField] int pointsToWin = 10;
     [SerializeField] GameType gameType;
     Scoreboard scoreboard;
@@ -38,10 +40,31 @@ public class GameManager : MonoBehaviour
     public void GameStart()
     {
         leftSide = true;
+        SpawnWalls();
         SpawnPlayers();
         SpawnBall();
     }
 
+    void SpawnWalls()
+    {
+        Camera gameCamera = Camera.main;
+        float top = gameCamera.ViewportToWorldPoint(new Vector3(0.5f, 1, 0)).y;
+        float bottom = gameCamera.ViewportToWorldPoint(new Vector3(0.5f, 0, 0)).y;
+        float left = gameCamera.ViewportToWorldPoint(new Vector3(0, 0, 0)).x;
+        float right = gameCamera.ViewportToWorldPoint(new Vector3(1, 0, 0)).x;
+
+        GameObject topWall = Instantiate(wallPrefab, new Vector2(0, top + 0.5f), Quaternion.identity);
+        topWall.GetComponent<BoxCollider2D>().size = new Vector2(right - left, 1f);
+
+        GameObject bottomWall = Instantiate(wallPrefab, new Vector2(0, bottom - 0.5f), Quaternion.identity);
+        bottomWall.GetComponent<BoxCollider2D>().size = new Vector2(right - left, 1f);
+
+        GameObject leftGoal = Instantiate(goalPrefab, new Vector2(left, 0), Quaternion.identity);
+        leftGoal.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, top - bottom);
+
+        GameObject rightGoal = Instantiate(goalPrefab, new Vector2(right, 0), Quaternion.identity);
+        rightGoal.GetComponent<BoxCollider2D>().size = new Vector2(0.5f, top - bottom);
+    }
     void SpawnPlayers()
     {
         float horizontalPadding = paddlePrefab.GetHorizontalPadding();

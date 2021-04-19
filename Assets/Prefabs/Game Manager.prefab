@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ballPrefab: {fileID: 1417019750309504886, guid: d2d95ea5cf78eeaffa6fff2907e369f3, type: 3}
-  scoreboard: {fileID: 0}
   paddlePrefab: {fileID: 650516147570699925, guid: 210333462ab1786a5a5991b2cb59a7a0, type: 3}
+  wallPrefab: {fileID: 4484592149436378343, guid: 855ed321d939f4aa1a379b7f9d70067d, type: 3}
+  goalPrefab: {fileID: 4058933574373781607, guid: 2f95f1550797a02fabbb03e7e3fba1ff, type: 3}
   pointsToWin: 10
+  gameType: 0
